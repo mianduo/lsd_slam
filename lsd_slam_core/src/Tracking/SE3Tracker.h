@@ -119,7 +119,7 @@ private:
 			int level,
 			bool plotResidual = false);
 
-#if defined(ENABLE_SSE)
+#if defined(ENABLE_SSE)//对多媒体应用起到全面强化作用
 	float calcResidualAndBuffersSSE(
 			const Eigen::Vector3f* refPoint,
 			const Eigen::Vector2f* refColVar,
@@ -130,7 +130,7 @@ private:
 			int level,
 			bool plotResidual = false);
 #endif
-#if defined(ENABLE_NEON)
+#if defined(ENABLE_NEON)//NEON指令集 能够加速多媒体和信号的处理算法
 	float calcResidualAndBuffersNEON(
 			const Eigen::Vector3f* refPoint,
 			const Eigen::Vector2f* refColVar,
