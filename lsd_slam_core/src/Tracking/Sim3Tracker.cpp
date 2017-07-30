@@ -766,14 +766,14 @@ Sim3ResidualStruct Sim3Tracker::calcSim3WeightsAndResidual(
 
 		float d = *(buf_d+i);	// d
 
-		float rp = *(buf_warped_residual+i); // r_p
-		float rd = *(buf_residual_d+i);	 // r_d
+		float rp = *(buf_warped_residual+i); // r_p 光度误差
+		float rd = *(buf_residual_d+i);	 // r_d  深度误差
 
-		float gx = *(buf_warped_dx+i);	// \delta_x I
-		float gy = *(buf_warped_dy+i);  // \delta_y I
+		float gx = *(buf_warped_dx+i);	// \delta_x I  dx
+		float gy = *(buf_warped_dy+i);  // \delta_y I  dy 
 
-		float s = settings.var_weight * *(buf_idepthVar+i);	// \sigma_d^2
-		float sv = settings.var_weight * *(buf_warped_idepthVar+i);	// \sigma_d^2'
+		float s = settings.var_weight * *(buf_idepthVar+i);	// \sigma_d^2 公式（14）逆深度方差Vi(p)
+		float sv = settings.var_weight * *(buf_warped_idepthVar+i);	// \sigma_d^2' 公式（19）Vj([p']1,2)
 
 
 		// calc dw/dd (first 2 components):
@@ -782,8 +782,8 @@ Sim3ResidualStruct Sim3Tracker::calcSim3WeightsAndResidual(
 		float g2 = (pz - tz) / (pz*pz*d);
 
 		// calc w_p
-		float drpdd = gx * g0 + gy * g1;	// ommitting the minus
-		float w_p = 1.0f / (cameraPixelNoise2 + s * drpdd * drpdd);
+		float drpdd = gx * g0 + gy * g1;	// ommitting the minus，图像对像素的梯度乘以像素坐标对深度d的求导。
+		float w_p = 1.0f / (cameraPixelNoise2 + s * drpdd * drpdd);//光度误差 的加权函数 公式（14）的倒数 1/sigma_rp^2.
 
 		float w_d = 1.0f / (sv + g2*g2*s);
 
